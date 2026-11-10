@@ -78,7 +78,7 @@ class Soroban_Delivery_Frontend {
 		wp_enqueue_script( 'soroban-delivery-engine', $base . 'assets/js/soroban-delivery-engine.js', array(), SOROBAN_DELIVERY_VERSION, true );
 		wp_enqueue_script( 'soroban-delivery-frontend', $base . 'assets/js/soroban-delivery-frontend.js', array( 'soroban-delivery-engine' ), SOROBAN_DELIVERY_VERSION, true );
 		wp_localize_script( 'soroban-delivery-frontend', 'SOROBAN_DELIVERY_FRONTEND', array(
-			'configUrl'  => rest_url( 'soroban-delivery/v1/config' ) . '?v=' . Soroban_Delivery_Estimator::config_version(),
+			'configUrl'  => add_query_arg( 'v', Soroban_Delivery_Estimator::config_version(), rest_url( 'soroban-delivery/v1/config' ) ),
 			'productUrl' => rest_url( 'soroban-delivery/v1/product/' ),
 		) );
 	}

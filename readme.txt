@@ -14,6 +14,10 @@ Estimated delivery dates calculated from your business days, official holiday ca
 
 Show customers an estimated delivery date range that is actually calculated from how your store works — not a flat "+5 days".
 
+**Who this is for**
+
+If you sell into the UK or Japan, a flat "+5 days" estimate quietly goes wrong: it lands on bank holidays, substitute days and your own closed days, and shows shoppers a date you cannot meet. This plugin works the range out from your actual pattern — open weekdays, preparation time, carrier transit days and the official holiday calendar — and displays it on the product page before checkout, stated as an estimate, never a promise.
+
 **How it works**
 
 * You choose a holiday calendar: **UK bank holidays** (official GOV.UK data, per division — England & Wales, Scotland, or Northern Ireland) or **Japanese national holidays** (generated from the statutory rules).
@@ -84,9 +88,11 @@ Yes. The plugin declares HPOS compatibility, and it does not read or write order
 
 == Screenshots ==
 
-1. The estimate on a product page, with its basis line.
+1. The estimate on a product page (UK calendar), with its basis line and cut-off countdown.
 2. Settings under WooCommerce → Delivery Dates.
 3. The simulator's day-by-day walk with holiday names.
+4. The same product page with the Japanese national-holiday calendar.
+5. The estimate placed on a regular page with the [soroban_delivery_estimate] shortcode.
 
 == Changelog ==
 

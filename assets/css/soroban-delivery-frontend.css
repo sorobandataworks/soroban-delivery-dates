@@ -1,0 +1,54 @@
+/* Soroban Delivery Dates — storefront estimate block.
+   Theme-agnostic, inherits the shop's fonts and colours, readable on
+   small screens. No animation; nothing here moves layout after load
+   beyond the estimate text itself appearing. */
+
+.soroban-delivery-estimate {
+	margin: 0.75em 0;
+	font-size: 0.95em;
+	line-height: 1.45;
+}
+
+.soroban-delivery-estimate-dates {
+	margin: 0;
+}
+
+.soroban-delivery-estimate-label {
+	font-weight: 600;
+}
+
+.soroban-delivery-estimate-basis,
+.soroban-delivery-estimate-noscript {
+	margin: 0.15em 0 0;
+	font-size: 0.88em;
+	opacity: 0.8;
+}
+
+.soroban-delivery-breakdown {
+	margin-top: 0.5em;
+	font-size: 0.88em;
+}
+
+.soroban-delivery-breakdown-title {
+	margin: 0 0 0.25em;
+	font-weight: 600;
+}
+
+.soroban-delivery-breakdown-list {
+	margin: 0;
+	padding-left: 1.2em;
+}
+
+.soroban-delivery-breakdown-note {
+	margin: 0.25em 0 0;
+	opacity: 0.8;
+}
+
+@media (max-width: 480px) {
+	.soroban-delivery-estimate {
+		font-size: 0.92em;
+	}
+	.soroban-delivery-breakdown-list {
+		padding-left: 1em;
+	}
+}

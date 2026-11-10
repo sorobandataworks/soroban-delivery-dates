@@ -4,7 +4,7 @@ Tags: woocommerce, delivery date, estimated delivery, business days, bank holida
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,6 +96,9 @@ Yes. The plugin declares HPOS compatibility, and it does not read or write order
 
 == Changelog ==
 
+= 1.1.3 =
+* Fixed: the delivery estimate did not appear on sites using the "Plain" permalink setting (Settings → Permalinks). The estimate now displays correctly with both "Plain" and "Pretty" permalink settings. No settings or data are changed by this update.
+
 = 1.1.2 =
 * Renamed: the plugin is now "Soroban Delivery Dates for WooCommerce" (slug: soroban-delivery-dates), with all internal prefixes renamed to match. The plugin was never publicly released under the old name, so no settings migration is involved.
 * Hardened: the calculation-breakdown HTML hook output is now passed through wp_kses_post() before display, and the admin preview is sanitised at the output point.
@@ -120,6 +123,9 @@ Yes. The plugin declares HPOS compatibility, and it does not read or write order
 * Admin simulator with day-by-day walk.
 
 == Upgrade Notice ==
+
+= 1.1.3 =
+Fixes the delivery estimate not appearing on sites that use the "Plain" permalink setting.
 
 = 1.1.2 =
 Renamed to Soroban Delivery Dates (new slug: soroban-delivery-dates), plus output-sanitisation and REST endpoint hardening.

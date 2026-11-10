@@ -1,0 +1,15 @@
+{
+ "uk-holidays.json": {
+  "source": "https://www.gov.uk/bank-holidays.json",
+  "retrieved_at_utc": "2026-11-04T12:01:12Z",
+  "coverage_start": "2025-01-01",
+  "coverage_end": "2028-12-31",
+  "generator": "tools/fetch_uk_holidays.py"
+ },
+ "jp-holidays.json": {
+  "source": "Act on National Holidays — rule-based generation",
+  "generator": "tools/gen_jp_holidays.py",
+  "coverage_start": "2025-01-01",
+  "coverage_end": "2028-12-31"
+ }
+}

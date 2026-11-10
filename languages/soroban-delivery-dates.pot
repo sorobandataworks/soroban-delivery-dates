@@ -1,0 +1,548 @@
+# Copyright (C) 2026 Soroban Data Works
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Soroban Delivery Dates for WooCommerce 1.1.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/soroban-delivery-dates\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-11-09T06:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: soroban-delivery-dates\n"
+
+#. Plugin Name of the plugin
+#: soroban-delivery-dates.php
+msgid "Soroban Delivery Dates for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: soroban-delivery-dates.php
+msgid "https://soroban.phoenixrefurbtools.workers.dev/"
+msgstr ""
+
+#. Description of the plugin
+#: soroban-delivery-dates.php
+msgid "Shows an estimated delivery date range on product pages, calculated from your business days, an official holiday calendar (UK bank holidays by division, or Japanese national holidays), your order cut-off time and preparation time. Dates are estimates, never guarantees."
+msgstr ""
+
+#. Author of the plugin
+#: soroban-delivery-dates.php
+msgid "Soroban Data Works"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:73
+#: includes/class-soroban-delivery-admin.php:74
+msgid "Delivery Dates"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:81
+#: includes/class-soroban-delivery-admin.php:82
+#: includes/class-soroban-delivery-admin.php:527
+msgid "Delivery Date Simulator"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:118
+msgid "Soroban Delivery Dates: WooCommerce is not active, so delivery estimates are hidden."
+msgstr ""
+
+#. translators: 1: failure reason code, 2: date/time the failure began, 3: number of recorded failures
+#: includes/class-soroban-delivery-admin.php:130
+#, php-format
+msgid "Soroban Delivery Dates: delivery estimates are currently HIDDEN (fail-safe: %1$s, since %2$s, %3$d occurrence(s)). Check the calendar coverage on the Delivery Dates settings page."
+msgstr ""
+
+#. translators: %s: date/time of recovery
+#: includes/class-soroban-delivery-admin.php:140
+#, php-format
+msgid "Soroban Delivery Dates: estimates recovered at %s — the fail-safe condition has cleared and dates are being shown again."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:157
+msgid "You do not have permission to export these settings."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:186
+msgid "You do not have permission to import these settings."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:219
+#: includes/class-soroban-delivery-admin.php:463
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:224
+msgid "Mon"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:225
+msgid "Tue"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:226
+msgid "Wed"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:227
+msgid "Thu"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:228
+msgid "Fri"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:229
+msgid "Sat"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:230
+msgid "Sun"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:234
+msgid "Soroban Delivery Dates — Settings"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:237
+msgid "Set up in about 5 minutes:"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:239
+msgid "Pick the holiday calendar for where your orders are prepared (UK region, or Japan)."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:240
+msgid "Tick the days your store is open, and add any extra closed dates (stocktaking, local holidays)."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:241
+msgid "Set the order cut-off time and how many business days you need to prepare an order."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:242
+msgid "Set the carrier transit range (fastest–slowest, in carrier operating days)."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:243
+msgid "Save, then open a product page: the estimated delivery range appears under the price. Test edge cases any time under Tools → Delivery Date Simulator."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:245
+msgid "Dates are always labelled as estimates — never a guarantee. If anything about the calendar data goes wrong, the estimate hides itself instead of showing a wrong date."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:254
+msgid "Show estimates"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:256
+msgid "Display estimated delivery dates on product pages"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:259
+#: includes/class-soroban-delivery-admin.php:395
+msgid "Holiday calendar"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:262
+msgid "United Kingdom (GOV.UK bank holidays)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:263
+msgid "Japan (national holidays)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:270
+msgid "The division applies to the UK calendar only."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:274
+msgid "Store open days"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:282
+msgid "Custom closed dates"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:285
+msgid "One date per line, format YYYY-MM-DD (e.g. stocktaking days, local closures). Invalid lines are ignored."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:289
+msgid "Order cut-off time"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:292
+msgid "Site timezone. Orders at or after this time start preparation on the next business day."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:296
+msgid "Preparation time"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:299
+msgid "business days"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:303
+msgid "Transit time"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:307
+msgid "carrier days (minimum – maximum)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:311
+msgid "Carrier operating days"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:319
+msgid "Display"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:323
+msgid "After the product title"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:324
+msgid "After the price"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:325
+msgid "After the short description"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:333
+msgid "Preview (right now, store defaults)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:337
+msgid "No estimate would be shown right now (see the status panel above)."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:340
+msgid "This preview is calculated for the current moment. On the storefront the same calculation runs in the visitor’s browser at view time, so cached pages stay correct."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:342
+msgid "Export / import settings"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:346
+msgid "Export settings (JSON)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:352
+msgid "Import settings"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:354
+msgid "Import re-validates every value with the same rules as saving by hand. Pro settings are included when the Pro add-on is active."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:368
+msgid "Settings imported."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:370
+msgid "Import failed: the file is not a valid settings export. Nothing was changed."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:372
+msgid "Import failed: no file was uploaded. Nothing was changed."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:387
+msgid "Status"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:391
+msgid "WooCommerce"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:392
+msgid "Active"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:392
+msgid "NOT active — estimates are hidden."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:399
+msgid "Could not be loaded — estimates are hidden (fail-safe)."
+msgstr ""
+
+#. translators: 1: calendar label, 2: coverage end date, 3: days remaining
+#: includes/class-soroban-delivery-admin.php:405
+#, php-format
+msgid "%1$s — data covers until %2$s (%3$d days from today). Data is bundled with the plugin and refreshed by plugin updates; nothing is fetched at runtime."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:412
+msgid "Coverage has ENDED: estimates are hidden until the plugin is updated."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:414
+msgid "Coverage ends within 30 days — please update the plugin soon."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:416
+msgid "Coverage ends within 90 days — plan a plugin update."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:423
+msgid "Estimate display"
+msgstr ""
+
+#. translators: %s: failure reason code
+#: includes/class-soroban-delivery-admin.php:430
+#, php-format
+msgid "Hidden by the fail-safe (%s). See the notice at the top of wp-admin."
+msgstr ""
+
+#. translators: %s: date/time of recovery
+#: includes/class-soroban-delivery-admin.php:436
+#, php-format
+msgid "Working (recovered at %s)."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:440
+msgid "Working. The daily health check last confirmed a computable estimate."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:487
+msgid "Invalid date or time."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:528
+msgid "Runs the exact calculation the storefront uses — including Pro rules for the selected product and destination — for any order moment. Nothing here changes the live settings or the shop’s health state."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:533
+msgid "Order date / time"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:537
+msgid "Site timezone."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:541
+msgid "Product (optional)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:544
+msgid "No product — store defaults"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:551
+msgid "With a product selected, per-product, category and stock rules apply, exactly as on the product page."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:556
+msgid "Destination zone (Pro, optional)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:559
+msgid "Visitor default (no destination)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:560
+msgid "No destination known"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:569
+msgid "Overrides (optional)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:571
+msgid "Preparation"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:573
+msgid "Transit"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:576
+msgid "Leave blank to use the resolved values."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:580
+msgid "Calculate"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:589
+msgid "Effective values used"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:593
+msgid "Preparation (business days)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:597
+msgid "Transit (carrier days)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:601
+msgid "Carrier calendar"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:602
+msgid "Same as the store calendar"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:602
+msgid "Carrier layer (Pro) — differs from the store calendar"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:616
+msgid "Result"
+msgstr ""
+
+#. translators: 1: dispatch date, 2: earliest arrival, 3: latest arrival
+#: includes/class-soroban-delivery-admin.php:621
+#, php-format
+msgid "Dispatched: %1$s — Estimated delivery: %2$s – %3$s"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:633
+msgid "Day-by-day walk"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:636
+msgid "Date"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:637
+msgid "Step"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:638
+msgid "Reason"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:665
+msgid "No estimate would be shown: the calculation runs past the end of the holiday calendar data (fail-safe). On the storefront the estimate is hidden in this case."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:667
+msgid "No estimate would be shown: the calendar data could not be loaded."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:669
+msgid "No estimate would be shown for this product: a rule hides it (for example, the Pro out-of-stock setting)."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:672
+msgid "No estimate would be shown: no further business/carrier day could be found within the scan limit. Check the open-weekday settings."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:674
+msgid "No estimate would be shown."
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:686
+msgid "Order placed (does not start today)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:688
+msgid "Preparation starts"
+msgstr ""
+
+#. translators: %d: running preparation day count
+#: includes/class-soroban-delivery-admin.php:691
+#, php-format
+msgid "Preparation day %d"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:693
+msgid "Dispatched"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:695
+msgid "Skipped (store closed)"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:697
+msgid "Skipped (carrier closed)"
+msgstr ""
+
+#. translators: %d: running transit day count
+#: includes/class-soroban-delivery-admin.php:701
+#, php-format
+msgid "Transit day %d"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:705
+msgid "earliest estimated arrival"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:708
+msgid "latest estimated arrival"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:724
+msgid "Open"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:726
+msgid "Store closed on this weekday"
+msgstr ""
+
+#. translators: %s: holiday name
+#: includes/class-soroban-delivery-admin.php:729
+#, php-format
+msgid "Holiday: %s"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:731
+msgid "Custom closed date"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:733
+msgid "Order at/after the cut-off time"
+msgstr ""
+
+#: includes/class-soroban-delivery-admin.php:735
+msgid "Carrier does not operate on this weekday"
+msgstr ""
+
+#. translators: %s: holiday name
+#: includes/class-soroban-delivery-admin.php:738
+#, php-format
+msgid "Carrier holiday: %s"
+msgstr ""
+
+#: includes/class-soroban-delivery-frontend.php:118
+msgid "Delivery estimates are calculated when JavaScript is enabled."
+msgstr ""
+
+#. translators: 1: hours, 2: minutes, 3: cut-off time
+#: includes/class-soroban-delivery-frontend.php:196
+#: includes/class-soroban-delivery-rest.php:86
+#, php-format
+msgid "Order within %1$d hrs %2$d mins (cut-off %3$s). "
+msgstr ""
+
+#. translators: %s: UK division label, e.g. "England & Wales"
+#: includes/class-soroban-delivery-frontend.php:205
+#: includes/class-soroban-delivery-rest.php:88
+#, php-format
+msgid "Based on UK bank holidays (%s). "
+msgstr ""
+
+#: includes/class-soroban-delivery-frontend.php:209
+#: includes/class-soroban-delivery-rest.php:89
+msgid "Based on Japanese national holidays. "
+msgstr ""
+
+#: includes/class-soroban-delivery-frontend.php:211
+#: includes/class-soroban-delivery-rest.php:91
+msgid "Estimate — not a guarantee."
+msgstr ""
+
+#: includes/class-soroban-delivery-rest.php:90
+msgid "Based on your delivery location. "
+msgstr ""

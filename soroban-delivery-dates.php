@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Soroban Delivery Dates for WooCommerce
  * Description:       Shows an estimated delivery date range on product pages, calculated from your business days, an official holiday calendar (UK bank holidays by division, or Japanese national holidays), your order cut-off time and preparation time. Dates are estimates, never guarantees.
- * Version:           1.1.2
+ * Version:           1.1.3
  * Author:            Soroban Data Works
  * Text Domain:       soroban-delivery-dates
  * Domain Path:       /languages
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SOROBAN_DELIVERY_VERSION', '1.1.2' );
+define( 'SOROBAN_DELIVERY_VERSION', '1.1.3' );
 define( 'SOROBAN_DELIVERY_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SOROBAN_DELIVERY_PLUGIN_FILE', __FILE__ );
 

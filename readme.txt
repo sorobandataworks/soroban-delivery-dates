@@ -38,6 +38,10 @@ If you sell into the UK or Japan, a flat "+5 days" estimate quietly goes wrong: 
 * United Kingdom: official bank holidays from GOV.UK (https://www.gov.uk/bank-holidays.json), 2025–2028, for England & Wales, Scotland and Northern Ireland — including substitute days.
 * Japan: national holidays 2025–2028 generated from the rules of the Act on National Holidays, including substitute holidays (振替休日) and citizens' holidays (国民の休日).
 
+**How the dates are checked**
+
+The UK calendar is the official GOV.UK bank-holiday data itself — not a hand-typed list — and the Japanese calendar is generated from the rules laid down in the Act on National Holidays, including substitute holidays and citizens' holidays. The server-side and browser-side calculations are verified against each other across 18 test scenarios, covering daylight-saving weekends, cut-off boundaries in British Summer Time and division-specific holiday exceptions. If a calculated date would fall outside the bundled calendar data (2025–2028), the estimate is hidden rather than guessed. Every estimate is labelled as an estimate, with its calendar basis shown — never as a guaranteed delivery date.
+
 A Pro add-on (sold separately, outside wordpress.org) adds per-product and per-category preparation times, per-shipping-zone transit adjustments, a Royal Mail carrier-holiday layer for the UK, a customer-facing calculation breakdown, and display customisation.
 
 == Installation ==

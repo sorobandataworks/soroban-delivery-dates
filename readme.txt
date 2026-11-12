@@ -8,11 +8,13 @@ Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Estimated delivery dates calculated from your business days, official holiday calendars and order cut-off — shown as a range, never a promise.
+Delivery date estimates that stay correct on cached pages: calculated in the browser from your cut-off, business days and official bank holidays.
 
 == Description ==
 
-Show customers an estimated delivery date range that is actually calculated from how your store works — not a flat "+5 days".
+Ever seen a product page promise a delivery date that the cut-off had already passed? Full-page caches and CDNs freeze whatever date was calculated when the page was cached. This plugin calculates the estimate in the visitor's browser, at the moment the page is viewed, so it stays correct behind page caches and CDNs — including right after your cut-off and across daylight-saving changes.
+
+It counts forward from how your store really works: open weekdays, order cut-off, preparation time, carrier transit days and the official holiday calendar (UK bank holidays from GOV.UK, by division, or Japanese national holidays). The result is shown as an estimated range with its basis — never as a guarantee.
 
 **Who this is for**
 
@@ -35,12 +37,12 @@ If you sell into the UK or Japan, a flat "+5 days" estimate quietly goes wrong: 
 
 **Calendars included**
 
-* United Kingdom: official bank holidays from GOV.UK (https://www.gov.uk/bank-holidays.json), 2025–2028, for England & Wales, Scotland and Northern Ireland — including substitute days.
+* United Kingdom: official bank holidays from GOV.UK (bundled snapshot of the GOV.UK data: https://www.gov.uk/bank-holidays.json), 2025–2028, for England & Wales, Scotland and Northern Ireland — including substitute days.
 * Japan: national holidays 2025–2028 generated from the rules of the Act on National Holidays, including substitute holidays (振替休日) and citizens' holidays (国民の休日).
 
 **How the dates are checked**
 
-The UK calendar is the official GOV.UK bank-holiday data itself — not a hand-typed list — and the Japanese calendar is generated from the rules laid down in the Act on National Holidays, including substitute holidays and citizens' holidays. The server-side and browser-side calculations are verified against each other across 18 test scenarios, covering daylight-saving weekends, cut-off boundaries in British Summer Time and division-specific holiday exceptions. If a calculated date would fall outside the bundled calendar data (2025–2028), the estimate is hidden rather than guessed. Every estimate is labelled as an estimate, with its calendar basis shown — never as a guaranteed delivery date.
+The UK calendar is a bundled snapshot of the official GOV.UK bank-holiday data — not a hand-typed list — and the Japanese calendar is generated from the rules laid down in the Act on National Holidays, including substitute holidays and citizens' holidays. The server-side and browser-side calculations are verified against each other across 18 test scenarios, covering daylight-saving weekends, cut-off boundaries in British Summer Time and division-specific holiday exceptions. If a calculated date would fall outside the bundled calendar data (2025–2028), the estimate is hidden rather than guessed. Every estimate is labelled as an estimate, with its calendar basis shown — never as a guaranteed delivery date.
 
 A Pro add-on (sold separately, outside wordpress.org) adds per-product and per-category preparation times, per-shipping-zone transit adjustments, a Royal Mail carrier-holiday layer for the UK, a customer-facing calculation breakdown, and display customisation.
 
@@ -73,6 +75,10 @@ No. There are no requests to third-party services and no analytics. The only dat
 = Does it work with page caching or a CDN? =
 
 Yes. Product pages contain no pre-calculated dates; the estimate is computed in the visitor's browser when the page is viewed, using a cacheable configuration document whose URL changes whenever settings change. Per-visitor inputs are fetched with a private, no-store request.
+
+= Why does my delivery date show yesterday's date, or ignore my cut-off? =
+
+If the product page is cached, a date calculated on the server is frozen at cache time. This plugin never stores a pre-calculated date in the page; the estimate is computed in the browser when the page is viewed.
 
 = Does it need JavaScript? =
 

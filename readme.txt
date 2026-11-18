@@ -52,13 +52,17 @@ A Pro add-on (sold separately, outside wordpress.org) adds per-product and per-c
 2. Activate the plugin.
 3. Go to WooCommerce → Delivery Dates and choose your calendar, open days, cut-off time, preparation and transit times.
 4. Check a scenario under Tools → Delivery Date Simulator.
-5. The estimate appears on single product pages automatically. You can also place it anywhere with the `[soroban_delivery_estimate]` shortcode.
+5. The estimate appears on single product pages automatically (cart and checkout pages are not covered yet — see FAQ). You can also place it anywhere with the `[soroban_delivery_estimate]` shortcode.
 
 == Frequently Asked Questions ==
 
 = Are the dates a guarantee? =
 
 No. The plugin always presents dates as an estimated range with its basis stated, and never as a guaranteed delivery date. Weather, carrier delays and other factors outside the calculation can still change the actual arrival day.
+
+= Does the estimate show on the cart and checkout pages? =
+
+Not yet. The estimate is shown on single product pages (and anywhere you place the `[soroban_delivery_estimate]` shortcode). Cart and checkout pages show WooCommerce's own shipping-method display, so the two can disagree — for example, a product page saying "Thursday" while checkout says "Friday". Cart and checkout display using the same calculation is the next feature; the cart version needs a "latest item in the cart" rule first, because a multi-item cart has no single product estimate to show. No date is promised for it yet.
 
 = Which calendars are supported? =
 

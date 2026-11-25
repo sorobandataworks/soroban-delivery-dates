@@ -9,6 +9,13 @@
 	line-height: 1.45;
 }
 
+/* Cart / checkout: the estimate sits in a totals-table row, so it
+   drops the block margin and inherits the table's alignment. */
+.soroban-delivery-estimate-cart {
+	margin: 0;
+	text-align: left;
+}
+
 .soroban-delivery-estimate-dates {
 	margin: 0;
 }

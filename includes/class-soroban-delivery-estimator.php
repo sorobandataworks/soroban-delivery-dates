@@ -78,6 +78,119 @@ class Soroban_Delivery_Estimator {
 	}
 
 	/**
+	 * Merge the resolved inputs of several products into a single
+	 * set of cart-level inputs (pure function — no WordPress calls —
+	 * so the merge rules are unit-testable with a plain PHP
+	 * interpreter; see tests in the release notes).
+	 *
+	 * The whole order ships together, so the slowest item sets the
+	 * pace: preparation and both transit bounds take the MAXIMUM
+	 * across items (the longest lead time wins), and the carrier
+	 * closure map is the UNION of the per-item maps (a day closed
+	 * for any item's carrier delays the combined shipment). If any
+	 * item's estimate is hidden by a rule, the cart estimate is
+	 * hidden too — showing a range computed from only part of the
+	 * order would understate it.
+	 *
+	 * @param array $items List of per-item arrays with keys:
+	 *                     visible (bool), prep_days (int),
+	 *                     transit_min (int), transit_max (int),
+	 *                     carrier_holidays (array), zone_applied (bool).
+	 * @return array {
+	 *     @type bool  $visible          Whether a cart estimate may be shown.
+	 *     @type int   $item_count       Number of items merged.
+	 *     @type int   $prep_days        Maximum preparation days.
+	 *     @type int   $transit_min      Maximum transit minimum.
+	 *     @type int   $transit_max      Maximum transit maximum (>= min).
+	 *     @type array $carrier_holidays Union of the per-item closure maps.
+	 *     @type bool  $zone_applied     Whether any item had a zone adjustment.
+	 * }
+	 */
+	public static function merge_cart_inputs( array $items ) {
+		$merged = array(
+			'visible'          => false,
+			'item_count'       => 0,
+			'prep_days'        => 0,
+			'transit_min'      => 0,
+			'transit_max'      => 0,
+			'carrier_holidays' => array(),
+			'zone_applied'     => false,
+		);
+		if ( ! $items ) {
+			return $merged;
+		}
+		$merged['visible'] = true;
+		foreach ( $items as $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+			$merged['item_count']++;
+			if ( empty( $item['visible'] ) ) {
+				$merged['visible'] = false;
+			}
+			$merged['prep_days']   = max( $merged['prep_days'], isset( $item['prep_days'] ) ? (int) $item['prep_days'] : 0 );
+			$merged['transit_min'] = max( $merged['transit_min'], isset( $item['transit_min'] ) ? (int) $item['transit_min'] : 0 );
+			$merged['transit_max'] = max( $merged['transit_max'], isset( $item['transit_max'] ) ? (int) $item['transit_max'] : 0 );
+			if ( ! empty( $item['carrier_holidays'] ) && is_array( $item['carrier_holidays'] ) ) {
+				// Array union keeps the first name seen for a date;
+				// only the closure itself affects the calculation.
+				$merged['carrier_holidays'] += $item['carrier_holidays'];
+			}
+			if ( ! empty( $item['zone_applied'] ) ) {
+				$merged['zone_applied'] = true;
+			}
+		}
+		if ( $merged['transit_max'] < $merged['transit_min'] ) {
+			$merged['transit_max'] = $merged['transit_min'];
+		}
+		if ( 0 === $merged['item_count'] ) {
+			$merged['visible'] = false;
+		}
+		return $merged;
+	}
+
+	/**
+	 * Resolve the merged calculation inputs for a list of products
+	 * (a cart's contents). Each product goes through the exact same
+	 * resolve_inputs() path as the product page — including every
+	 * Pro filter — and the results are combined by
+	 * merge_cart_inputs().
+	 *
+	 * @param WC_Product[] $products Products to merge.
+	 * @return array|null Merged inputs (see merge_cart_inputs()),
+	 *                    or null when the calendar data cannot be loaded.
+	 */
+	public static function resolve_cart_inputs( array $products ) {
+		$store = self::resolve_inputs( null );
+		if ( null === $store ) {
+			return null;
+		}
+		$settings = $store['settings'];
+		$items    = array();
+		foreach ( $products as $product ) {
+			if ( ! $product instanceof WC_Product ) {
+				continue;
+			}
+			$inputs = self::resolve_inputs( $product );
+			if ( null === $inputs ) {
+				return null;
+			}
+			$zone_applied = ( $inputs['transit_min'] !== (int) $settings['transit_min']
+				|| $inputs['transit_max'] !== (int) $settings['transit_max'] )
+				&& (bool) apply_filters( 'soroban_delivery_zone_adjustment_applied', false, $product );
+			$items[] = array(
+				'visible'          => $inputs['visible'],
+				'prep_days'        => $inputs['prep_days'],
+				'transit_min'      => $inputs['transit_min'],
+				'transit_max'      => $inputs['transit_max'],
+				'carrier_holidays' => $inputs['carrier_holidays'],
+				'zone_applied'     => $zone_applied,
+			);
+		}
+		return self::merge_cart_inputs( $items );
+	}
+
+	/**
 	 * Build a full estimate.
 	 *
 	 * @param WC_Product|null $product Product context, when any.

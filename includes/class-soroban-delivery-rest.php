@@ -23,6 +23,18 @@
  *      products are answered for: anything else returns the same
  *      404 as a product that does not exist.
  *
+ *  GET /wp-json/soroban-delivery/v1/cart?ids=12,34
+ *      Whole-cart effective inputs for the cart / checkout estimate:
+ *      the per-product inputs of every listed item, merged by
+ *      Soroban_Delivery_Estimator::merge_cart_inputs() so the longest
+ *      lead time in the basket sets the range — the same code path
+ *      as the product endpoint, so the cart, checkout and product
+ *      page can never disagree about an item's inputs. Only
+ *      publicly viewable products that need shipping take part;
+ *      anything else is silently left out of the merge (the same
+ *      privacy stance as the product endpoint). Like the product
+ *      response, it is session-dependent and marked private/no-store.
+ *
  * @package SorobanDeliveryDates
  */
 
@@ -49,6 +61,14 @@ class Soroban_Delivery_REST {
 			'permission_callback' => '__return_true',
 			'args'                => array(
 				'id' => array( 'type' => 'integer', 'required' => true ),
+			),
+		) );
+		register_rest_route( self::NAMESPACE, '/cart', array(
+			'methods'             => 'GET',
+			'callback'            => array( __CLASS__, 'cart' ),
+			'permission_callback' => '__return_true',
+			'args'                => array(
+				'ids' => array( 'type' => 'string', 'required' => false, 'default' => '' ),
 			),
 		) );
 	}
@@ -158,6 +178,93 @@ class Soroban_Delivery_REST {
 		$response->header( 'Cache-Control', 'private, no-store' );
 		$response->header( 'Vary', 'Cookie' );
 		return $response;
+	}
+
+	/**
+	 * Whole-cart effective inputs for the current visitor session.
+	 *
+	 * The response mirrors the product endpoint's fields, merged
+	 * across every eligible item, so the browser engine renders the
+	 * cart / checkout estimate exactly like a product estimate.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public static function cart( WP_REST_Request $request ) {
+		$ids = self::parse_id_list( $request->get_param( 'ids' ) );
+		self::bootstrap_wc_session();
+
+		$products = array();
+		foreach ( $ids as $id ) {
+			$product = function_exists( 'wc_get_product' ) ? wc_get_product( $id ) : null;
+			if ( ! $product instanceof WC_Product || ! self::is_publicly_viewable( $product ) ) {
+				continue;
+			}
+			// Virtual / downloadable items are delivered without a
+			// carrier; they must not stretch the whole order's range.
+			if ( method_exists( $product, 'needs_shipping' ) && ! $product->needs_shipping() ) {
+				continue;
+			}
+			$products[] = $product;
+		}
+
+		$data = array(
+			'visible'      => false,
+			'item_count'   => 0,
+			'prep_days'    => 0,
+			'transit_min'  => 0,
+			'transit_max'  => 0,
+			'zone_applied' => false,
+		);
+		if ( $products ) {
+			$merged = Soroban_Delivery_Estimator::resolve_cart_inputs( $products );
+			if ( null === $merged ) {
+				return new WP_Error( 'soroban_delivery_calendar_missing', 'Calendar data is unavailable.', array( 'status' => 503 ) );
+			}
+			$data['visible']      = (bool) $merged['visible'];
+			$data['item_count']   = (int) $merged['item_count'];
+			$data['prep_days']    = (int) $merged['prep_days'];
+			$data['transit_min']  = (int) $merged['transit_min'];
+			$data['transit_max']  = (int) $merged['transit_max'];
+			$data['zone_applied'] = (bool) $merged['zone_applied'];
+			// Include the merged carrier map only when it differs
+			// from the store-level one in the config document.
+			$store_inputs = Soroban_Delivery_Estimator::resolve_inputs( null );
+			if ( null !== $store_inputs && $merged['carrier_holidays'] !== $store_inputs['carrier_holidays'] ) {
+				$data['carrier_holidays'] = $merged['carrier_holidays'];
+			}
+		}
+
+		$response = new WP_REST_Response( $data, 200 );
+		// Session-dependent: never store, never share between visitors.
+		$response->header( 'Cache-Control', 'private, no-store' );
+		$response->header( 'Vary', 'Cookie' );
+		return $response;
+	}
+
+	/**
+	 * Parse a comma-separated product ID list: positive integers,
+	 * de-duplicated, capped so a hand-crafted URL cannot turn the
+	 * endpoint into an unbounded product scan.
+	 *
+	 * @param mixed $raw Raw 'ids' parameter.
+	 * @return int[]
+	 */
+	private static function parse_id_list( $raw ) {
+		if ( ! is_string( $raw ) && ! is_numeric( $raw ) ) {
+			return array();
+		}
+		$ids = array();
+		foreach ( explode( ',', (string) $raw ) as $part ) {
+			$id = (int) trim( $part );
+			if ( $id > 0 ) {
+				$ids[ $id ] = $id;
+			}
+			if ( count( $ids ) >= 100 ) {
+				break;
+			}
+		}
+		return array_values( $ids );
 	}
 
 	/**

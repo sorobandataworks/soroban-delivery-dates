@@ -1,6 +1,7 @@
 <?php
 /**
- * Front-end display: product-page estimate and [soroban_delivery_estimate]
+ * Front-end display: product-page estimate, the cart / checkout
+ * whole-order estimate, and the [soroban_delivery_estimate]
  * shortcode.
  *
  * CACHE-SAFE RENDERING (audit item A): the HTML served for a product
@@ -53,16 +54,33 @@ class Soroban_Delivery_Frontend {
 		$priority = (int) apply_filters( 'soroban_delivery_display_priority', $priority );
 		add_action( 'woocommerce_single_product_summary', array( __CLASS__, 'product_estimate' ), $priority );
 		add_shortcode( 'soroban_delivery_estimate', array( __CLASS__, 'shortcode' ) );
+		// Cart and checkout: a row inside the totals table, just
+		// above the order total, showing the WHOLE order's estimate
+		// (see render_cart()). The *_before_order_total hooks are
+		// used rather than the *_after_shipping ones because the
+		// latter only fire when the cart both needs shipping AND has
+		// shipping methods to show — a store with no methods
+		// configured would silently lose the estimate. Both hooks
+		// also fire when WooCommerce re-renders the totals fragments
+		// over AJAX, so the row — with the current item list — is
+		// rebuilt on every cart / checkout update.
+		add_action( 'woocommerce_cart_totals_before_order_total', array( __CLASS__, 'cart_totals_estimate_row' ) );
+		add_action( 'woocommerce_review_order_before_order_total', array( __CLASS__, 'review_order_estimate_row' ) );
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
 	}
 
 	/**
 	 * Enqueue the browser engine on pages that can show an estimate
-	 * (product pages, and singular content using the shortcode).
+	 * (product pages, the cart, the checkout, and singular content
+	 * using the shortcode).
 	 */
 	public static function enqueue() {
 		$needed = false;
 		if ( function_exists( 'is_product' ) && is_product() ) {
+			$needed = true;
+		} elseif ( function_exists( 'is_cart' ) && is_cart() ) {
+			$needed = true;
+		} elseif ( function_exists( 'is_checkout' ) && is_checkout() ) {
 			$needed = true;
 		} elseif ( is_singular() ) {
 			$post = get_queried_object();
@@ -80,6 +98,7 @@ class Soroban_Delivery_Frontend {
 		wp_localize_script( 'soroban-delivery-frontend', 'SOROBAN_DELIVERY_FRONTEND', array(
 			'configUrl'  => add_query_arg( 'v', Soroban_Delivery_Estimator::config_version(), rest_url( 'soroban-delivery/v1/config' ) ),
 			'productUrl' => rest_url( 'soroban-delivery/v1/product/' ),
+			'cartUrl'    => rest_url( 'soroban-delivery/v1/cart' ),
 		) );
 	}
 
@@ -102,6 +121,64 @@ class Soroban_Delivery_Frontend {
 		global $product;
 		$p = ( isset( $product ) && $product instanceof WC_Product ) ? $product : null;
 		return self::render( $p );
+	}
+
+	/**
+	 * Hook callback: estimate row in the cart totals table.
+	 */
+	public static function cart_totals_estimate_row() {
+		self::print_estimate_row();
+	}
+
+	/**
+	 * Hook callback: estimate row in the checkout order-review table.
+	 */
+	public static function review_order_estimate_row() {
+		self::print_estimate_row();
+	}
+
+	/**
+	 * Print the totals-table row carrying the cart estimate
+	 * container, when the cart has anything that ships.
+	 */
+	private static function print_estimate_row() {
+		$html = self::render_cart();
+		if ( '' === $html ) {
+			return;
+		}
+		echo '<tr class="soroban-delivery-estimate-row"><td colspan="2">' . $html . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_cart() escapes every dynamic value.
+	}
+
+	/**
+	 * The cache-safe cart container. Like render(), it contains no
+	 * dates — only the IDs of the cart items that need shipping, so
+	 * the browser script can ask the cart endpoint for the merged
+	 * whole-order inputs (the longest lead time in the basket sets
+	 * the range, exactly as the product pages compute their inputs).
+	 * Virtual / downloadable items are not listed: they are not
+	 * delivered by a carrier and must not stretch the range.
+	 *
+	 * @return string HTML, or '' when there is nothing to estimate.
+	 */
+	public static function render_cart() {
+		if ( ! function_exists( 'WC' ) || ! WC() || ! WC()->cart ) {
+			return '';
+		}
+		$ids = array();
+		foreach ( WC()->cart->get_cart() as $item ) {
+			$p = isset( $item['data'] ) ? $item['data'] : null;
+			if ( $p instanceof WC_Product && $p->needs_shipping() ) {
+				$ids[] = (int) $p->get_id();
+			}
+		}
+		$ids = array_values( array_unique( $ids ) );
+		if ( ! $ids ) {
+			return '';
+		}
+		return '<div class="soroban-delivery-estimate soroban-delivery-estimate-cart" data-soroban-delivery-estimate data-soroban-delivery-cart data-product-ids="' . esc_attr( implode( ',', $ids ) ) . '">'
+			. '<noscript><p class="soroban-delivery-estimate-noscript">'
+			. esc_html__( 'Delivery estimates are calculated when JavaScript is enabled.', 'soroban-delivery-dates' )
+			. '</p></noscript></div>';
 	}
 
 	/**

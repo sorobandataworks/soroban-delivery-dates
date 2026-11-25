@@ -235,10 +235,28 @@
 	}
 
 	function initContainer(container) {
+		// boot() re-runs when WooCommerce replaces the totals
+		// fragments; a container that is already live only needs its
+		// (cart) inputs refreshed, never a second initialisation.
+		if (container.__sorobanInit) {
+			if (container.__sorobanRefresh) { container.__sorobanRefresh(); }
+			return;
+		}
+		container.__sorobanInit = true;
+
+		var isCart = container.hasAttribute('data-soroban-delivery-cart');
 		var productId = parseInt(container.getAttribute('data-product-id') || '0', 10);
-		var paramsPromise = productId > 0
-			? fetchJson(window.SOROBAN_DELIVERY_FRONTEND.productUrl + productId)
-			: Promise.resolve(null);
+
+		function fetchParams() {
+			if (isCart) {
+				var ids = container.getAttribute('data-product-ids') || '';
+				return fetchJson(window.SOROBAN_DELIVERY_FRONTEND.cartUrl + '?ids=' + encodeURIComponent(ids));
+			}
+			return productId > 0
+				? fetchJson(window.SOROBAN_DELIVERY_FRONTEND.productUrl + productId)
+				: Promise.resolve(null);
+		}
+		var paramsPromise = fetchParams();
 
 		function refresh() {
 			Promise.all([getConfig(), paramsPromise]).then(function (res) {
@@ -247,6 +265,15 @@
 				container.textContent = '';
 				container.style.display = 'none';
 			});
+		}
+		if (isCart) {
+			// Cart contents change without a page reload (quantity
+			// updates, items removed): the merged inputs must be
+			// re-fetched, not just re-rendered from the old ones.
+			container.__sorobanRefresh = function () {
+				paramsPromise = fetchParams();
+				refresh();
+			};
 		}
 		refresh();
 		// Keep the countdown and the cut-off/midnight boundaries honest
@@ -260,6 +287,17 @@
 	function boot() {
 		var nodes = document.querySelectorAll('[data-soroban-delivery-estimate]');
 		for (var i = 0; i < nodes.length; i++) { initContainer(nodes[i]); }
+	}
+
+	// WooCommerce swaps the cart-totals and order-review fragments
+	// over AJAX; the estimate row inside them is re-rendered by the
+	// server with the current item list, and boot() initialises the
+	// fresh container (or refreshes the surviving one) so the dates
+	// always describe the basket as it stands.
+	if (window.jQuery) {
+		window.jQuery(document.body).on('updated_cart_totals updated_checkout added_to_cart removed_from_cart', function () {
+			boot();
+		});
 	}
 
 	if (document.readyState === 'loading') {

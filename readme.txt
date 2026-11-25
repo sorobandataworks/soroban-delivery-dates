@@ -4,21 +4,19 @@ Tags: woocommerce, delivery date, estimated delivery, business days, bank holida
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.3
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Delivery date estimates that stay correct on cached pages: calculated in the browser from your cut-off, business days and official bank holidays.
+Estimated delivery dates calculated from your business days, official holiday calendars and order cut-off — shown as a range, never a promise.
 
 == Description ==
 
-Ever seen a product page promise a delivery date that the cut-off had already passed? Full-page caches and CDNs freeze whatever date was calculated when the page was cached. This plugin calculates the estimate in the visitor's browser, at the moment the page is viewed, so it stays correct behind page caches and CDNs — including right after your cut-off and across daylight-saving changes.
-
-It counts forward from how your store really works: open weekdays, order cut-off, preparation time, carrier transit days and the official holiday calendar (UK bank holidays from GOV.UK, by division, or Japanese national holidays). The result is shown as an estimated range with its basis — never as a guarantee.
+Show customers an estimated delivery date range that is actually calculated from how your store works — not a flat "+5 days".
 
 **Who this is for**
 
-If you sell into the UK or Japan, a flat "+5 days" estimate quietly goes wrong: it lands on bank holidays, substitute days and your own closed days, and shows shoppers a date you cannot meet. This plugin works the range out from your actual pattern — open weekdays, preparation time, carrier transit days and the official holiday calendar — and displays it on the product page before checkout, stated as an estimate, never a promise.
+If you sell into the UK or Japan, a flat "+5 days" estimate quietly goes wrong: it lands on bank holidays, substitute days and your own closed days, and shows shoppers a date you cannot meet. This plugin works the range out from your actual pattern — open weekdays, preparation time, carrier transit days and the official holiday calendar — and displays it on the product page, in the cart and at checkout, stated as an estimate, never a promise.
 
 **How it works**
 
@@ -27,6 +25,7 @@ If you sell into the UK or Japan, a flat "+5 days" estimate quietly goes wrong: 
 * On each product page the plugin counts forward from the moment of viewing: orders before the cut-off start preparation the same business day; later orders start on the next business day. Preparation and transit skip closed days, weekends and holidays on the correct calendar.
 * The calculation runs **in the visitor's browser at view time** (in your site's timezone), so the dates stay correct even behind full-page caches and CDNs — including right after the cut-off and across daylight-saving changes. Without JavaScript no dates are shown, rather than risk showing a wrong one.
 * The result is displayed as a **range with its basis** ("Based on UK bank holidays (England & Wales). Estimate — not a guarantee."), plus a live "order within X hrs Y mins" countdown when the cut-off is still ahead.
+* In the **cart and at checkout** the estimate is calculated from the **whole order**: the item with the longest preparation time sets the pace, so the range shown there always matches what the product pages promised. It updates as items are added, removed or re-quantified, and virtual/downloadable items never stretch it.
 
 **Built-in safety**
 
@@ -37,12 +36,8 @@ If you sell into the UK or Japan, a flat "+5 days" estimate quietly goes wrong: 
 
 **Calendars included**
 
-* United Kingdom: official bank holidays from GOV.UK (bundled snapshot of the GOV.UK data: https://www.gov.uk/bank-holidays.json), 2025–2028, for England & Wales, Scotland and Northern Ireland — including substitute days.
+* United Kingdom: official bank holidays from GOV.UK (https://www.gov.uk/bank-holidays.json), 2025–2028, for England & Wales, Scotland and Northern Ireland — including substitute days.
 * Japan: national holidays 2025–2028 generated from the rules of the Act on National Holidays, including substitute holidays (振替休日) and citizens' holidays (国民の休日).
-
-**How the dates are checked**
-
-The UK calendar is a bundled snapshot of the official GOV.UK bank-holiday data — not a hand-typed list — and the Japanese calendar is generated from the rules laid down in the Act on National Holidays, including substitute holidays and citizens' holidays. The server-side and browser-side calculations are verified against each other across 18 test scenarios, covering daylight-saving weekends, cut-off boundaries in British Summer Time and division-specific holiday exceptions. If a calculated date would fall outside the bundled calendar data (2025–2028), the estimate is hidden rather than guessed. Every estimate is labelled as an estimate, with its calendar basis shown — never as a guaranteed delivery date.
 
 A Pro add-on (sold separately, outside wordpress.org) adds per-product and per-category preparation times, per-shipping-zone transit adjustments, a Royal Mail carrier-holiday layer for the UK, a customer-facing calculation breakdown, and display customisation.
 
@@ -52,17 +47,13 @@ A Pro add-on (sold separately, outside wordpress.org) adds per-product and per-c
 2. Activate the plugin.
 3. Go to WooCommerce → Delivery Dates and choose your calendar, open days, cut-off time, preparation and transit times.
 4. Check a scenario under Tools → Delivery Date Simulator.
-5. The estimate appears on single product pages automatically (cart and checkout pages are not covered yet — see FAQ). You can also place it anywhere with the `[soroban_delivery_estimate]` shortcode.
+5. The estimate appears on single product pages, in the cart and at checkout automatically. You can also place it anywhere with the `[soroban_delivery_estimate]` shortcode.
 
 == Frequently Asked Questions ==
 
 = Are the dates a guarantee? =
 
 No. The plugin always presents dates as an estimated range with its basis stated, and never as a guaranteed delivery date. Weather, carrier delays and other factors outside the calculation can still change the actual arrival day.
-
-= Does the estimate show on the cart and checkout pages? =
-
-Not yet. The estimate is shown on single product pages (and anywhere you place the `[soroban_delivery_estimate]` shortcode). Cart and checkout pages show WooCommerce's own shipping-method display, so the two can disagree — for example, a product page saying "Thursday" while checkout says "Friday". Cart and checkout display using the same calculation is the next feature; the cart version needs a "latest item in the cart" rule first, because a multi-item cart has no single product estimate to show. No date is promised for it yet.
 
 = Which calendars are supported? =
 
@@ -80,10 +71,6 @@ No. There are no requests to third-party services and no analytics. The only dat
 
 Yes. Product pages contain no pre-calculated dates; the estimate is computed in the visitor's browser when the page is viewed, using a cacheable configuration document whose URL changes whenever settings change. Per-visitor inputs are fetched with a private, no-store request.
 
-= Why does my delivery date show yesterday's date, or ignore my cut-off? =
-
-If the product page is cached, a date calculated on the server is frozen at cache time. This plugin never stores a pre-calculated date in the page; the estimate is computed in the browser when the page is viewed.
-
 = Does it need JavaScript? =
 
 On the storefront, yes: dates are calculated in the browser so they are correct at the moment of viewing. Without JavaScript, no dates are displayed (a short neutral note appears instead). wp-admin (settings preview and simulator) works without JavaScript.
@@ -95,6 +82,10 @@ Anyone with the WooCommerce shop-management capability (Administrators and Shop 
 = Can I set different preparation times per product? =
 
 Not in the free version — one store-wide preparation time. Per-product and per-category preparation times are part of the Pro add-on.
+
+= Does the estimate appear in the cart and at checkout? =
+
+Yes. A row in the cart totals table and the checkout order review (just above the order total) shows the range for the whole order. It appears whether or not the store has shipping methods configured. Because an order ships together, the item with the longest preparation time sets the pace; the inputs are resolved through the same code path as the product pages (including Pro rules when the add-on is active), so the three displays agree. If any item in the basket has its estimate hidden by a rule, the cart estimate is hidden too, rather than understating the range. The classic cart/checkout templates are supported; the WooCommerce Cart and Checkout blocks do not fire the classic totals hooks and are not covered yet.
 
 = Does it work with HPOS (custom order tables)? =
 
@@ -109,6 +100,11 @@ Yes. The plugin declares HPOS compatibility, and it does not read or write order
 5. The estimate placed on a regular page with the [soroban_delivery_estimate] shortcode.
 
 == Changelog ==
+
+= 1.3.0 =
+* New: the estimated delivery range now also appears in the cart and at checkout (classic templates), as a row in the totals table just above the order total. It is calculated from the whole order — the longest preparation time in the basket wins — using the same resolved inputs as the product pages, so all three displays agree, and it refreshes when the basket changes.
+* New: a `/cart` REST endpoint returns the merged whole-cart inputs with the same privacy rules as the per-product endpoint (publicly viewable, shipping-needed items only; private, no-store). Virtual and downloadable items never stretch the range, and if any item's estimate is hidden by a rule the cart estimate is hidden too.
+* Verified against WordPress 7.1 and WooCommerce 11.3.
 
 = 1.1.3 =
 * Fixed: the delivery estimate did not appear on sites using the "Plain" permalink setting (Settings → Permalinks). The estimate now displays correctly with both "Plain" and "Pretty" permalink settings. No settings or data are changed by this update.
@@ -137,6 +133,9 @@ Yes. The plugin declares HPOS compatibility, and it does not read or write order
 * Admin simulator with day-by-day walk.
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+The estimated delivery range now also appears in the cart and at checkout, calculated from the whole order. No settings or data are changed by this update.
 
 = 1.1.3 =
 Fixes the delivery estimate not appearing on sites that use the "Plain" permalink setting.
